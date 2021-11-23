@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:LibraryAdo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="MWindow"
     Title="MainWindow"
     Width="800"
     Height="450"
@@ -21,62 +22,68 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <ComboBox
-                Name="Table"
-                Width="150"
-                Height="30"
-                Margin="2"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                SelectionChanged="Table_SelectionChanged">
-                <ComboBoxItem Content="Authors" ></ComboBoxItem>
-                <ComboBoxItem Content="Books" ></ComboBoxItem>
-                <ComboBoxItem Content="Categories" ></ComboBoxItem>
-            </ComboBox>
-            <ComboBox
-                Grid.Column="1"
-                Width="150"
-                Height="30"
-                Margin="2"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" />
-            <TextBox
-                Grid.Column="2"
-                Width="150"
-                Height="30"
-                Margin="20"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Text="TextBox"
-                TextAlignment="Left" />
-            <Button
-                Grid.Column="2"
-                Width="60"
-                Height="30"
-                Margin="10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Content="Button" />
-            <TextBlock
-                Grid.Column="0"
-                Margin="5"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                FontWeight="Bold"
-                Text="Table"
-                TextAlignment="Center"
-                TextWrapping="Wrap" />
-            <TextBlock
-                Grid.Column="1"
-                Margin="5"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                FontWeight="Bold"
-                Text="CatAut"
-                TextAlignment="Center"
-                TextWrapping="Wrap" />
+            <StackPanel Grid.Column="0">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    FontWeight="Bold"
+                    Text="Table"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
+                <ComboBox
+                    Name="Table"
+                    Height="30"
+                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    SelectionChanged="Table_SelectionChanged">
+                    <ComboBoxItem Content="Authors" />
+                    <ComboBoxItem Content="Categories" />
+                    <ComboBoxItem Content="Custom" />
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    FontWeight="Bold"
+                    Text="CatAut"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
+                <ComboBox
+                    Name="CatAut"
+                    SelectionChanged="CatAut_SelectionChanged"
+                    Height="30"
+                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom">
+                    <!--<ComboBoxItem Content="Authors" />
+                    <ComboBoxItem Content="Categories" />-->
+                </ComboBox>
+            </StackPanel>
+
+
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    Height="30"
+                    Margin="5"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Text="TextBox"
+                    TextAlignment="Left" />
+                <Button
+                    Grid.Column="1"
+                    Width="70"
+                    Height="30"
+                    Margin="5"
+                    HorizontalAlignment="Right"
+                    Content="Button" />
+            </Grid>
+
         </Grid>
     </Grid>
 </Window>

@@ -13,30 +13,7 @@ namespace LibraryAdo
         public readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DbConnect"].ConnectionString;
         public MainWindow()
         {
-            //var connectionString = ConfigurationManager.ConnectionStrings["DbConnect"].ConnectionString;
             InitializeComponent();
-            Table.SelectedIndex = 0;
-            //LoadToCombo();
-        }
-
-        public void FillDataGrid()
-        {
-            SqlConnection sqlConnection;
-            using (sqlConnection = new SqlConnection(ConnectionString))
-            {
-                ComboBoxItem cbi = (ComboBoxItem)Table.SelectedItem;
-
-                var cmdString = $"SELECT * FROM {cbi.Content}";
-
-                SqlCommand sqlCommand = new SqlCommand(cmdString, sqlConnection);
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-                DataTable dataTable = new DataTable(cbi.Content.ToString());
-
-                sqlDataAdapter.Fill(dataTable);
-
-                DataGrd.ItemsSource = dataTable.DefaultView;
-                MWindow.Title = $"SELECT * FROM {cbi.Content}";
-            }
         }
 
         public void LoadAuthorToCombo()
@@ -62,9 +39,6 @@ namespace LibraryAdo
 
         public void FillAuthorDataGrid()
         {
-
-            /*SELECT CONCAT(FirstName, LastName) AS 'Author', Books.Name AS 'BookName' FROM Authors JOIN Books ON Books.Id_Author = Authors.Id GROUP BY CONCAT(FirstName, LastName), Books.Name HAVING CONCAT(FirstName, LastName) = 'Boris Carpov'*/
-
             SqlConnection sqlConnection;
             using (sqlConnection = new SqlConnection(ConnectionString))
             {
@@ -99,8 +73,6 @@ namespace LibraryAdo
                     }
                     sqlConnection.Close();
                 }
-
-                CatAut.SelectedIndex = 0;
             }
         }
 
@@ -110,7 +82,7 @@ namespace LibraryAdo
             using (sqlConnection = new SqlConnection(ConnectionString))
             {
                 var cmdString = $@"SELECT Categories.Name AS 'Category', Books.Name AS 'Book' FROM Categories JOIN Books ON Books.Id_Category = Categories.Id WHERE Categories.Name = '{CatAut.SelectedItem}'";
-                //CatAut.SelectedIndex = 0;
+
                 SqlCommand sqlCommand = new SqlCommand(cmdString, sqlConnection);
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
                 DataTable dataTable = new DataTable(CatAut.SelectedItem.ToString());
@@ -123,41 +95,87 @@ namespace LibraryAdo
             }
         }
 
+        public void FillCustomDataGrid()
+        {
+            SqlConnection sqlConnection;
+            using (sqlConnection = new SqlConnection(ConnectionString))
+            {
+                ComboBoxItem cbi = (ComboBoxItem)Table.SelectedItem;
 
+                var cmdString = "SELECT * FROM Books";
+
+                SqlCommand sqlCommand = new SqlCommand(cmdString, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                DataTable dataTable = new DataTable(cbi.Content.ToString());
+
+                sqlDataAdapter.Fill(dataTable);
+
+                DataGrd.ItemsSource = dataTable.DefaultView;
+            }
+        }
 
         private void Table_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Table.SelectedIndex == 0)
             {
-                CatAut.Items.Clear();
-                LoadAuthorToCombo();
+                CatAut.IsEnabled = true;
+                TbSearch.IsEnabled = false;
 
+                LoadAuthorToCombo();
             }
             else if (Table.SelectedIndex == 1)
             {
-                CatAut.Items.Clear();
+                CatAut.IsEnabled = true;
+                TbSearch.IsEnabled = false;
+
                 LoadCategoriesToCombo();
             }
-
+            else if (Table.SelectedIndex == 2)
+            {
+                FillCustomDataGrid();
+                CatAut.Items.Clear();
+                CatAut.IsEnabled = false;
+                TbSearch.IsEnabled = true;
+            }
         }
 
         private void CatAut_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*if (Table.SelectedIndex == 0)
+            if (CatAut.SelectedItem is null) return;
+            if (Table.SelectedIndex == 0)
             {
                 FillAuthorDataGrid();
-
             }
             else if (Table.SelectedIndex == 1)
             {
                 FillCategoryDataGrid();
-            }*/
-            //FillAuthorDataGrid();
-            FillCategoryDataGrid();
+            }
+        }
 
+        private void TbSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TbSearch.Text != "")
+            {
+                SqlConnection sqlConnection;
+                using (sqlConnection = new SqlConnection(ConnectionString))
+                {
+                    ComboBoxItem cbi = (ComboBoxItem)Table.SelectedItem;
 
-            
+                    var cmdString = $"SELECT * FROM Books WHERE Name LIKE '%{TbSearch.Text}%'";
 
+                    SqlCommand sqlCommand = new SqlCommand(cmdString, sqlConnection);
+                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                    DataTable dataTable = new DataTable(cbi.Content.ToString());
+
+                    sqlDataAdapter.Fill(dataTable);
+
+                    DataGrd.ItemsSource = dataTable.DefaultView;
+                }
+            }
+            else if (TbSearch.Text == "")
+            {
+                FillCustomDataGrid();
+            }
         }
     }
 }

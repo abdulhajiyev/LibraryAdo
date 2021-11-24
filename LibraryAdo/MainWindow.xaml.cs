@@ -177,5 +177,13 @@ namespace LibraryAdo
                 FillCustomDataGrid();
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // DELETE FROM Books WHERE Name = 'Alfreds Futterkiste';
+            DataRowView drv = (DataRowView)DataGrd.SelectedItem;
+            //MessageBox.Show(DataGrd.SelectedItem);
+            drv.Row.Delete();
+        }
     }
 }

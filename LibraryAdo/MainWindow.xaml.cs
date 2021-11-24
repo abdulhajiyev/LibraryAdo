@@ -180,10 +180,16 @@ namespace LibraryAdo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // DELETE FROM Books WHERE Name = 'Alfreds Futterkiste';
-            DataRowView drv = (DataRowView)DataGrd.SelectedItem;
-            //MessageBox.Show(DataGrd.SelectedItem);
-            drv.Row.Delete();
+            DataRowView row = (DataRowView)DataGrd.SelectedItem;
+            row.Delete();
+
+            SqlConnection sqlConnection;
+            using (sqlConnection = new SqlConnection(ConnectionString))
+            {
+                SqlCommand sqlCommand = new SqlCommand($"DELETE FROM Books WHERE Name = '{row["Name"]}'", sqlConnection);
+                sqlConnection.Open();
+                sqlCommand.ExecuteNonQuery();
+            }
         }
     }
 }
